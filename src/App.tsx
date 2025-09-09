@@ -12,7 +12,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [testMode, setTestMode] = useState(true); // Default to test mode
 
   const handleVerificationSelect = (type: VerificationType) => {
     setVerificationType(type);
@@ -21,16 +20,13 @@ function App() {
     setIsSubmitted(false);
   };
 
-  const handleTestModeToggle = () => {
-    setTestMode(!testMode);
-  };
 
   const handleBankLogin = (loginData: BankLoginData) => {
     console.log('handleBankLogin called with:', loginData);
     setIsLoading(true);
     
     setTimeout(() => {
-      const risk = evaluateEmailRisk(loginData.email, testMode);
+      const risk = evaluateEmailRisk(loginData.email);
       console.log('Risk data found:', risk);
       setRiskData(risk);
       setIsLoggedIn(true);
@@ -42,7 +38,7 @@ function App() {
     setIsLoading(true);
     
     setTimeout(() => {
-      const risk = evaluateNameRisk(formData.fullName, testMode);
+       const risk = evaluateNameRisk(formData.fullName);
       setRiskData(risk);
       setIsSubmitted(true);
       setIsLoading(false);
@@ -59,11 +55,7 @@ function App() {
   const renderRightPanel = () => {
     if (!verificationType) {
       return (
-        <VerificationCards 
-          onSelect={handleVerificationSelect} 
-          testMode={testMode}
-          onTestModeToggle={handleTestModeToggle}
-        />
+        <VerificationCards onSelect={handleVerificationSelect} />
       );
     }
 
@@ -74,7 +66,6 @@ function App() {
           onLogin={handleBankLogin}
           riskData={riskData}
           isLoggedIn={isLoggedIn}
-          testMode={testMode}
         />
       );
     }
@@ -86,7 +77,6 @@ function App() {
           onSubmit={handleGovernmentSubmit}
           riskData={riskData}
           isSubmitted={isSubmitted}
-          testMode={testMode}
         />
       );
     }

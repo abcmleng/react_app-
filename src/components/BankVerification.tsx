@@ -12,15 +12,13 @@ interface BankVerificationProps {
   onLogin: (data: BankLoginData) => void;
   riskData: RiskData | null;
   isLoggedIn: boolean;
-  testMode?: boolean;
 }
 
 export const BankVerification: React.FC<BankVerificationProps> = ({
   onBack,
   onLogin,
   riskData,
-  isLoggedIn,
-  testMode = false
+  isLoggedIn
 }) => {
   const [formData, setFormData] = useState<BankLoginData>({
     email: '',
@@ -38,7 +36,7 @@ export const BankVerification: React.FC<BankVerificationProps> = ({
     e.preventDefault();
     console.log('BankVerification handleSubmit called with:', formData);
     
-    if (!testMode && !deviceData) {
+    if (!deviceData) {
       console.error('Device intelligence data not available');
       return;
     }
@@ -102,22 +100,9 @@ export const BankVerification: React.FC<BankVerificationProps> = ({
   return (
     <>
       <BankHeader />
-      {!testMode && <DeviceIntelligence onDeviceData={handleDeviceData} />}
+      <DeviceIntelligence onDeviceData={handleDeviceData} />
       <div className="h-full flex items-center justify-center p-8 bg-gray-50">
         <div className="max-w-md w-full">
-          {!testMode && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <span className="font-medium">Live Mode:</span> Using real device intelligence and API verification
-                {deviceData && (
-                  <span className="block mt-1 text-xs">
-                    Event ID: {deviceData.eventId.substring(0, 20)}...
-                  </span>
-                )}
-              </p>
-            </div>
-          )}
-          
           <div className="flex items-center space-x-3 mb-8">
             <button
               onClick={onBack}
