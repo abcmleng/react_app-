@@ -53,14 +53,20 @@
 
 
 import React from 'react';
-import { CreditCard, Shield } from 'lucide-react';
+import { CreditCard, Shield, TestTube } from 'lucide-react';
 import { VerificationType } from '../types';
 
 interface VerificationCardsProps {
   onSelect: (type: VerificationType) => void;
+  testMode: boolean;
+  onTestModeToggle: () => void;
 }
 
-export const VerificationCards: React.FC<VerificationCardsProps> = ({ onSelect }) => {
+export const VerificationCards: React.FC<VerificationCardsProps> = ({ 
+  onSelect, 
+  testMode, 
+  onTestModeToggle 
+}) => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -71,7 +77,23 @@ export const VerificationCards: React.FC<VerificationCardsProps> = ({ onSelect }
               <img src="src/security.png" alt="ID Merit Logo" className="h-10 w-auto" />
               <span className="font-bold text-xl text-gray-900">IDAssure</span>
             </div>
-            <nav className="space-x-4">
+            <nav className="flex items-center space-x-4">
+              {/* Test Mode Toggle */}
+              <div className="flex items-center space-x-2">
+                <TestTube className={`w-4 h-4 ${testMode ? 'text-orange-600' : 'text-gray-400'}`} />
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={testMode}
+                    onChange={onTestModeToggle}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                </label>
+                <span className={`text-sm font-medium ${testMode ? 'text-orange-600' : 'text-gray-500'}`}>
+                  Test Mode
+                </span>
+              </div>
               <a href="#" className="text-gray-700 hover:text-blue-600">Home</a>
               <a href="#" className="text-gray-700 hover:text-blue-600">About</a>
               <a href="#" className="text-gray-700 hover:text-blue-600">Contact</a>
@@ -83,6 +105,19 @@ export const VerificationCards: React.FC<VerificationCardsProps> = ({ onSelect }
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-8 bg-gray-50">
         <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-lg shadow">
+          {testMode && (
+            <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <TestTube className="w-5 h-5 text-orange-600" />
+                <span className="font-semibold text-orange-800">Test Mode Active</span>
+              </div>
+              <p className="text-sm text-orange-700">
+                Using dummy data for testing. Bank: emails A-M = low risk, N-Z = high risk. 
+                Government: names A-M = low risk, N-Z = high risk.
+              </p>
+            </div>
+          )}
+          
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Choose Verification Method</h2>
             <p className="text-gray-600">Select your preferred verification type to continue</p>

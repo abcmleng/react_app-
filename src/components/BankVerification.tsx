@@ -5,29 +5,44 @@ import { TransactionForm } from './TransactionForm';
 import { RecentTransactions } from './RecentTransactions';
 import { BankHeader } from './BankHeader';
 import { BankFooter } from './BankFooter';
+import { DeviceIntelligence } from './DeviceIntelligence';
 
 interface BankVerificationProps {
   onBack: () => void;
   onLogin: (data: BankLoginData) => void;
   riskData: RiskData | null;
   isLoggedIn: boolean;
+  testMode?: boolean;
 }
 
 export const BankVerification: React.FC<BankVerificationProps> = ({
   onBack,
   onLogin,
   riskData,
-  isLoggedIn
+  isLoggedIn,
+  testMode = false
 }) => {
   const [formData, setFormData] = useState<BankLoginData>({
     email: '',
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [deviceData, setDeviceData] = useState<{ eventId: string; uniqueId: string } | null>(null);
+
+  const handleDeviceData = (data: { eventId: string; uniqueId: string }) => {
+    setDeviceData(data);
+    console.log('Device Intelligence Data:', data);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('BankVerification handleSubmit called with:', formData);
+    
+    if (!testMode && !deviceData) {
+      console.error('Device intelligence data not available');
+      return;
+    }
+    
     setIsLoading(true);
     
     // Simulate API call delay
@@ -87,8 +102,22 @@ export const BankVerification: React.FC<BankVerificationProps> = ({
   return (
     <>
       <BankHeader />
+      {!testMode && <DeviceIntelligence onDeviceData={handleDeviceData} />}
       <div className="h-full flex items-center justify-center p-8 bg-gray-50">
         <div className="max-w-md w-full">
+          {!testMode && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <span className="font-medium">Live Mode:</span> Using real device intelligence and API verification
+                {deviceData && (
+                  <span className="block mt-1 text-xs">
+                    Event ID: {deviceData.eventId.substring(0, 20)}...
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
+          
           <div className="flex items-center space-x-3 mb-8">
             <button
               onClick={onBack}

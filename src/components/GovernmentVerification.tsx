@@ -9,13 +9,15 @@ interface GovernmentVerificationProps {
   onSubmit: (data: GovernmentFormData) => void;
   riskData: RiskData | null;
   isSubmitted: boolean;
+  testMode?: boolean;
 }
 
 export const GovernmentVerification: React.FC<GovernmentVerificationProps> = ({
   onBack,
   onSubmit,
   riskData,
-  isSubmitted
+  isSubmitted,
+  testMode = false
 }) => {
   const [formData, setFormData] = useState<GovernmentFormData>({
     fullName: '',
@@ -102,6 +104,14 @@ export const GovernmentVerification: React.FC<GovernmentVerificationProps> = ({
       <GovernmentHeader />
       <div className="flex-grow flex items-center justify-center">
         <div className="max-w-md w-full">
+          {!testMode && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <span className="font-medium">Live Mode:</span> Using real API verification
+              </p>
+            </div>
+          )}
+          
           <div className="flex items-center space-x-3 mb-8">
             <button
               onClick={onBack}
